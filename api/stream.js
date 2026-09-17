@@ -9,6 +9,7 @@ export default async function handler(request, response) {
 
     try {
         const linksEncontrados = await getStreams(id, type, undefined, undefined);
+        console.log("Links Encontrados", linksEncontrados)
         const addonStreams = linksEncontrados.map(link => {
         return {
             name: link.name,
@@ -16,12 +17,15 @@ export default async function handler(request, response) {
             url: link.url
         };
         });
-
+        
+        console.log("AddonStreams", addonStreams)
         return response.status(200).json({
             streams: addonStreams
         });
 
+
     } catch (error) {
+        console.log(error)
         return response.status(200).json({ streams: [] });
     }
 }
