@@ -29,12 +29,16 @@ export default async function handler(request, response) {
         const plugins = JSON.parse(pluginsData);
 
         const pluginsAtivos = plugins.scrapers.filter(p => p.enabled === true);
+        console.log("Plugins Ativos", pluginsAtivos)
 
         const promessasDeRaspagem = pluginsAtivos.map(async (plugin) => {
             try {
-                const moduloPath = path.resolve(process.cwd(), 'api', 'saimuel-nuvio-repo', plugin.filename);
+                const moduloPath = path.resolve(
+                    process.cwd(), 'api', 'saimuel-nuvio-repo', plugin.filename
+                );
                 const modulo = await import(moduloPath);
-                
+                console.log("Raspando...", plugin.name, plugin.filename, moduloPath)
+
                 return await modulo.getStreams(id, type, season, episode);
             } catch (err) {
                 console.error(`Erro no plugin ${plugin.name}:`, err);
@@ -43,7 +47,8 @@ export default async function handler(request, response) {
         });
 
         const execucaoDosScrapers = Promise.all(promessasDeRaspagem);
-
+        console.log("Realizando promessas")
+        
         const resultados = await Promise.race([
             execucaoDosScrapers,
             CreateTimeout(50000) 
@@ -58,6 +63,7 @@ export default async function handler(request, response) {
             url: link.url
         }));
 
+        console.log("Streams", addonStreams)
         return response.status(200).json({ streams: addonStreams });
 
     } catch (error) {
