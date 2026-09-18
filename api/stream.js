@@ -28,7 +28,7 @@ export default async function handler(request, response) {
         const pluginsData = await fs.readFile(jsonPath, 'utf8');
         const plugins = JSON.parse(pluginsData);
 
-        const pluginsAtivos = plugins.filter(p => p.enabled === true);
+        const pluginsAtivos = plugins.scrapers.filter(p => p.enabled === true);
 
         const promessasDeRaspagem = pluginsAtivos.map(async (plugin) => {
             try {
