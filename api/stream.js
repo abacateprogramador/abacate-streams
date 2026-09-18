@@ -24,7 +24,7 @@ export default async function handler(request, response) {
     console.log("Type & ID", type, id, season, episode)
 
     try {
-        const jsonPath = path.join(process.cwd(), 'api', 'manifest.json'); // Ajuste o caminho se necessário
+        const jsonPath = path.join(process.cwd(), 'api', 'saimuel-nuvio-repo', 'manifest.json'); // Ajuste o caminho se necessário
         const pluginsData = await fs.readFile(jsonPath, 'utf8');
         const plugins = JSON.parse(pluginsData);
 
@@ -32,7 +32,7 @@ export default async function handler(request, response) {
 
         const promessasDeRaspagem = pluginsAtivos.map(async (plugin) => {
             try {
-                const moduloPath = path.resolve(process.cwd(), 'api', plugin.path);
+                const moduloPath = path.resolve(process.cwd(), 'api', 'saimuel-nuvio-repo', plugin.filename);
                 const modulo = await import(moduloPath);
                 
                 return await modulo.getStreams(id, type, season, episode);
